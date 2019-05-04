@@ -8,7 +8,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    
     <title>weixin</title>
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -28,6 +27,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<div class="top">
 			<div class="logo"><s></s></div>
 			<div class="webName">花生米</div>
+			<div class="userInfo">
+				<div id="username"></div>
+				<div id="headimg"></div>
+			</div>
 		</div>
 		<!-- E = top -->
 		<!-- S = nav-->
@@ -37,8 +40,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<hr/>
 				<li><a href="javascript:void(0)" class="sub">关注一下</a></li>
 				<li><a href="javascript:void(0)" class="sub">微信登陆</a></li>
+				<li><a href="javascript:void(0)" class="sub hide">微信登陆</a></li>
+				<li><a href="javascript:void(0)" class="sub">退出登录</a></li>
 			</ul>
-
 		</div>
 		<!-- E = nav -->
 		<!-- S = content -->
@@ -47,10 +51,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<p>注意：由于本网站使用的是测试公众号</p>
 				<p>&nbsp;&nbsp;微信登陆前，务必先关注测试公众号</p>
 			</div>
-			<div class="content_s"></div>
+			<div class="content_s" id="cont"></div>
 			<img src="" id="qrious">
 		</div>
-		<!-- E = content -->
+		<!-- E = conten t -->
   </body>
 </html>
 
