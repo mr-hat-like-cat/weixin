@@ -35,7 +35,6 @@ public class AServlet extends HttpServlet
 	static JSONObject json = null;
 	static JSONObject userInfo = null;
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException 
 	{
 		response.setContentType("text/html;charset=utf-8");
 		
@@ -46,7 +45,12 @@ public class AServlet extends HttpServlet
 		String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxe1e3696881c14c1d&" +
 					 "secret=cef0895ae1acbf624ad6057916da0da9&code="+code+"&grant_type=authorization_code";
 		json = doGetJson(url);
-		String access_token = json.getString("access_token");
+		String access_token = null;
+		if( json.getString("access_token") != null ) 
+		{
+			access_token = json.getString("access_token");
+		}
+		
 		String openid = json.getString("openid");
 		
 		
@@ -57,13 +61,17 @@ public class AServlet extends HttpServlet
 		headimgurl = userInfo.getString("headimgurl");
 		
 		//4.向微信客户端响应用户信息
-		response.getWriter().println("<h3>登陆成功</h3>");
+		try {
+			response.getWriter().println("<h3>登陆成功</h3>");
+		} catch (IOException e) {
+			throw new RuntimeException();
+		}
 //		response.getWriter().println("<h2>用户名:"+nickname+"</h2><br/>");
 //		response.getWriter().println("<h2>头像:</h2><br/><img src="+headimgurl+" width=132 height=132/>");
 	}
 
 	//向指定目标地址发送请求，并接受返回的json数据
-    public JSONObject doGetJson(String url) throws ClientProtocolException, IOException
+    public JSONObject doGetJson(String url) 
     {
         JSONObject jsonObject = null;
         //首先初始化HttpClient对象
@@ -71,16 +79,23 @@ public class AServlet extends HttpServlet
         //通过get方式进行提交
         HttpGet httpGet = new HttpGet(url);
         //通过HTTPclient的execute方法进行发送请求
-        HttpResponse response = client.execute(httpGet);
-        //从response里面拿自己想要的结果
-        HttpEntity entity = response.getEntity();
-        if(entity != null)
-        {
-            String result = EntityUtils.toString(entity,"UTF-8");
-            jsonObject = JSONObject.fromObject(result);
-        }
-        //把链接释放掉
-        httpGet.releaseConnection();
+        HttpResponse response;
+		try 
+		{
+			response = client.execute(httpGet);
+	        //从response里面拿自己想要的结果
+	        HttpEntity entity = response.getEntity();
+	        if(entity != null)
+	        {
+	            String result = EntityUtils.toString(entity,"UTF-8");
+	            jsonObject = JSONObject.fromObject(result);
+	        }
+	        //把链接释放掉
+	        httpGet.releaseConnection();
+		}  catch (Exception e) 
+		{
+			throw new RuntimeException();
+		}
         return jsonObject;
     }
 	@OnOpen
